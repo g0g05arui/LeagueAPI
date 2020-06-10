@@ -25,7 +25,7 @@ func readHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	querry := p.ByName("key")
 	if querry == "user" { ///By UID
 		qID, _ := strconv.ParseInt(r.FormValue("id"), 10, 64)
-		user, err := getUser(qID)
+		user, err := getUserByID(qID)
 		var printData []byte
 		if err == nil {
 			printData, _ = json.Marshal(user)
@@ -54,7 +54,7 @@ func addHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 
 func activationHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	id, _ := strconv.ParseInt(r.FormValue("id"), 10, 64)
-	user, err := getUser(id)
+	user, err := getUserByID(id)
 	var printData []byte
 	if err != nil {
 		printData, _ = json.Marshal(HTTPResponse{Response: "User does not exist", Code: 404})
@@ -69,5 +69,26 @@ func activationHandler(w http.ResponseWriter, r *http.Request, p httprouter.Para
 		}
 	}
 	fmt.Println("handler user ", id)
+	fmt.Fprintln(w, string(printData))
+}
+
+func loginHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	///userName,parola
+	_, err := getUserByUsername(r.FormValue("user"))
+	var printData []byte
+	if err == nil {
+
+		if canLogin(r.FormValue("user"), r.FormValue("pass")) {
+			sID := generate16DigitID()
+			for seesionExist(sID) {
+				sID = generate16DigitID()
+			}
+			printData, _ = json.Marshal(HTTPResponse{Response: strconv.FormatInt(sID, 10), Code: 200})
+		} else {
+			printData, _ = json.Marshal(HTTPResponse{Response: strconv.FormatInt(0, 10), Code: 400})
+		}
+	} else {
+		printData, _ = json.Marshal(HTTPResponse{Response: strconv.FormatInt(0, 10), Code: 404})
+	}
 	fmt.Fprintln(w, string(printData))
 }

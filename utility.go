@@ -16,7 +16,7 @@ var (
 	Request la DB dupa uID
 	Formeaza un user pregenerat
 */
-func getUser(uID int64) (User, error) {
+func getUserByID(uID int64) (User, error) {
 	return User{
 		UID:              uID,
 		InstitutionEmail: "mihai.indreias@unibuc.ro",
@@ -27,6 +27,20 @@ func getUser(uID int64) (User, error) {
 		Major:            "Inginerie",
 		PersonalEmail:    "mihai.indreias@gmail.com",
 		Username:         "g0g05arui",
+	}, nil
+}
+
+func getUserByUsername(username string) (User, error) {
+	return User{
+		UID:              12345,
+		InstitutionEmail: "vlad.cainamisir@gmail.com",
+		YearOfStudy:      1,
+		Facultate:        "Politehnica",
+		College:          "Politehnica Bucuresti",
+		Serie:            "123",
+		Major:            "Inginerie",
+		PersonalEmail:    "mihai.indreias@gmail.com",
+		Username:         username,
 	}, nil
 }
 
@@ -65,6 +79,14 @@ func addUser(newUser User) HTTPResponse {
 	sendVerifcationMail(newUser.InstitutionEmail, "http://34.67.7.77:8555/activate?id="+strconv.FormatInt(userID, 10))
 	fmt.Println(newUser)
 	return HTTPResponse{Response: "User added", Code: 200}
+}
+
+func seesionExist(sID int64) bool {
+	return false
+}
+
+func canLogin(user, pass string) bool {
+	return user == "cnmsr" && pass == "e10adc3949ba59abbe56e057f20f883e"
 }
 
 func sendVerifcationMail(to, body string) {
