@@ -18,36 +18,35 @@ import (
 	despre UID-ul din request ( grupuri / houses /etc...)
 	----END------
 
+	NEVERMIND ??
+	Problema era cu grupurile , dar cred ca aia se face in cadrul structurii de grup...
 */
 func readHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	querry := p.ByName("key")
-	fmt.Println(querry)
 	if querry == "user" { ///By UID
 		qID, _ := strconv.ParseInt(r.FormValue("id"), 10, 64)
-		printData, _ := json.Marshal(getUser(qID))
+		user, err := getUser(qID)
+		var printData []byte
+		if err == nil {
+			printData, _ = json.Marshal(user)
+		} else {
+			printData, _ = json.Marshal(HTTPResponse{Response: "Unexistend user", Code: 404})
+		}
 		fmt.Fprintln(w, string(printData))
 	} else if querry == "post" {
 		fmt.Fprintf(w, "post")
 	}
 }
 
-/*
-	----TODO----
-	UID trebuie generate random
-	----END-----
-*/
-
 func addHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	querry := p.ByName("key")
-	fmt.Println(querry)
 	if querry == "user" {
 		decoder := json.NewDecoder(r.Body)
-		newU := User{0, "", "", ""}
+		newU := User{0, "", "", "", "", 0, "", "", "", ""}
 		decoder.Decode(&newU)
 		response := addUser(newU)
 		printData, _ := json.Marshal(response)
 		fmt.Fprintln(w, string(printData))
-		fmt.Println(newU)
 	} else if querry == "post" {
 
 	}

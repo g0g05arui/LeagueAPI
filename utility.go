@@ -1,5 +1,10 @@
 package main
 
+import (
+	"fmt"
+	"math/rand"
+)
+
 var (
 	lastUserID int64
 )
@@ -8,12 +13,30 @@ var (
 	Request la DB dupa uID
 	Formeaza un user pregenerat
 */
-func getUser(uID int64) User {
-	return User{UID: uID, Mail: "mihai.indreias@gmail.com", Username: "g0g05arui"}
+func getUser(uID int64) (User, error) {
+	return User{
+		UID:              uID,
+		InstitutionEmail: "mihai.indreias@unibuc.ro",
+		YearOfStudy:      1,
+		Facultate:        "Politehnica",
+		University:       "Politehnica Bucuresti",
+		Serie:            "123",
+		Major:            "Inginerie",
+		PersonalEmail:    "mihai.indreias@gmail.com",
+		Username:         "g0g05arui",
+	}, nil
 }
 
-func findUserByUsername(newUser string) bool {
-	return true
+func generate16DigitID() int64 {
+	return 1e16 + rand.Int63n(1e15)
+}
+
+func findUserByUsername(userName string) bool {
+	return false
+}
+
+func findUserByID(userID int64) bool {
+	return false
 }
 
 /*
@@ -31,7 +54,11 @@ func addUser(newUser User) HTTPResponse {
 	/*
 		Add User to DB
 	*/
-	newUser.UID = lastUserID
-	lastUserID++
+	userID := generate16DigitID()
+	for findUserByID(userID) {
+		userID = generate16DigitID()
+	}
+	newUser.UID = userID
+	fmt.Println(newUser)
 	return HTTPResponse{Response: "User added", Code: 200}
 }
