@@ -19,6 +19,7 @@ type User struct {
 	Facultate        string       `json:"Facultate"`
 	Major            string       `json:"Major"`
 	Serie            string       `json:"Serie"`
+	verified         bool
 }
 
 /*

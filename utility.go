@@ -2,7 +2,10 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"math/rand"
+	"net/smtp"
+	"strconv"
 )
 
 var (
@@ -59,6 +62,21 @@ func addUser(newUser User) HTTPResponse {
 		userID = generate16DigitID()
 	}
 	newUser.UID = userID
+	sendVerifcationMail(newUser.InstitutionEmail, "http://34.67.7.77:8555/activate?id="+strconv.FormatInt(userID, 10))
 	fmt.Println(newUser)
 	return HTTPResponse{Response: "User added", Code: 200}
+}
+
+func sendVerifcationMail(to, body string) {
+	from := "league.noreply@gmail.com"
+	pass := "indreias@leagueINC"
+	msg := "From: " + from + "\n" +
+		"To: " + to + "\n" +
+		"Subject: League INC verification\n\n" + body
+	err := smtp.SendMail("smtp.gmail.com:587",
+		smtp.PlainAuth("", from, pass, "smtp.gmail.com"),
+		from, []string{to}, []byte(msg))
+	if err != nil {
+		log.Printf("smtp error: %s", err)
+	}
 }

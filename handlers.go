@@ -42,7 +42,7 @@ func addHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	querry := p.ByName("key")
 	if querry == "user" {
 		decoder := json.NewDecoder(r.Body)
-		newU := User{0, "", "", "", "", 0, "", "", "", ""}
+		newU := User{0, "", "", "", "", 0, "", "", "", "", false}
 		decoder.Decode(&newU)
 		response := addUser(newU)
 		printData, _ := json.Marshal(response)
@@ -50,4 +50,24 @@ func addHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	} else if querry == "post" {
 
 	}
+}
+
+func activationHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	id, _ := strconv.ParseInt(r.FormValue("id"), 10, 64)
+	user, err := getUser(id)
+	var printData []byte
+	if err != nil {
+		printData, _ = json.Marshal(HTTPResponse{Response: "User does not exist", Code: 404})
+	} else {
+		if user.verified == true {
+			printData, _ = json.Marshal(HTTPResponse{Response: "User already activated", Code: 304})
+		} else {
+			/*
+				Change status in db
+			*/
+			printData, _ = json.Marshal(HTTPResponse{Response: "User verified", Code: 202})
+		}
+	}
+	fmt.Println("handler user ", id)
+	fmt.Fprintln(w, string(printData))
 }

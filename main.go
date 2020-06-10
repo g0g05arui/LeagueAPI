@@ -23,11 +23,13 @@ var wg sync.WaitGroup
 	ca sa fie cryptate requesturile
 	----END-----
 */
+
 func main() {
 	rand.Seed(time.Now().UnixNano())
 	serverCRUD := httprouter.New()
 	serverCRUD.GET("/read/:key", readHandler)
 	serverCRUD.POST("/add/:key", addHandler)
+	serverCRUD.GET("/activate", activationHandler)
 	wg.Add(1)
 	go func() {
 		http.ListenAndServe(":8555", serverCRUD)
