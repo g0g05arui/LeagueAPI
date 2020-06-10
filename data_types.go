@@ -15,7 +15,7 @@ type User struct {
 	Username         string       `json:"Username"`
 	PasswordHash     passwordType `json:"Password"`
 	YearOfStudy      int32        `json:"YearOfStudy"`
-	University       string       `json:"University"`
+	College          string       `json:"College"`
 	Facultate        string       `json:"Facultate"`
 	Major            string       `json:"Major"`
 	Serie            string       `json:"Serie"`

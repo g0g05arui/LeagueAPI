@@ -19,7 +19,7 @@ func getUser(uID int64) (User, error) {
 		InstitutionEmail: "mihai.indreias@unibuc.ro",
 		YearOfStudy:      1,
 		Facultate:        "Politehnica",
-		University:       "Politehnica Bucuresti",
+		College:          "Politehnica Bucuresti",
 		Serie:            "123",
 		Major:            "Inginerie",
 		PersonalEmail:    "mihai.indreias@gmail.com",
