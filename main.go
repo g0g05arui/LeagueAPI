@@ -13,7 +13,7 @@ var wg sync.WaitGroup
 	@Note Comunicatia nu este inca secure pentru ca folosim http
 	----TODO----
 	cumparat un domeniu + generat certificat SSL ca sa putem folosi https
-	ca sa fie cryptate requesturi le
+	ca sa fie cryptate requesturile
 	----END-----
 */
 func main() {
